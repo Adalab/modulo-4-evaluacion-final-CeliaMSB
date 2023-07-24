@@ -76,3 +76,28 @@ server.get ('/api/recetas/:id', async (req,res) => {
   const [results] = await conn.query(select, idRecipe);
   res.json(results[0]);
 });
+
+server.post ('/api/recetas', async (req,res) => {
+  const newRecipe = req.body;
+  try{
+    const insert = 'INSERT INTO recetas (nombre, ingredientes, instrucciones) VALUES (?,?,?)';
+    const conn =await getConnection();
+    const [results] = await conn.query(insert, [
+      newRecipe.nombre,
+      newRecipe.ingredientes, 
+      newRecipe.instrucciones]);
+    conn.end();
+    console.log(results);
+    res.json({
+      success: true,
+      id: results.insertId
+    })
+  }
+  catch(error){
+    console.log(error);
+    res.json({
+      success: false,
+      message: 'Error, receta no añadida'
+    })
+  }
+});
