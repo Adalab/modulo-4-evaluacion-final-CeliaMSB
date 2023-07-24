@@ -1,7 +1,5 @@
 // Servidor Express
 
-// Para probar los ficheros estáticos del fronend, entrar en <http://localhost:4500/>
-// Para probar el API, entrar en <http://localhost:4500/api/items>
 
 // Imports
 
@@ -61,10 +59,11 @@ server.get('/api/recetas', async (req, res) => {
   const select = 'SELECT * FROM recetas';
   const conn = await getConnection();
   const [results] = await conn.query(select, user);
+  numOfElements = results.length // utilizamos el lenght para indicar el número de elementos del listado
   conn.end();
   res.json({
 
-     "info": { "count": results.length}, // número de elementos  
+     "info": { "count": numOfElements}, 
       "results": results // listado 
    });
 });
