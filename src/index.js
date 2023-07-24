@@ -20,7 +20,7 @@ const server = express();
 
 server.use(cors());
 server.use(express.json({limit: "25mb"}));
-server.set('view engine', 'ejs');
+
 
 
 
@@ -56,31 +56,15 @@ server.listen(port, () => {
 
 // GET /api/items
 
-server.get("/api/items", async (req, res) => {
-
-  const selectProducts = "SELECT * FROM products";
-
+server.get('/api/recetas', async (req, res) => {
+  const user = req.params.user;
+  const select = 'SELECT * FROM recetas';
   const conn = await getConnection();
-
-  const [results] = await conn.query(selectProducts);
-
-  console.log(results);
-
+  const [results] = await conn.query(select, user);
   conn.end();
+  res.json({
 
-  res.json(results);
+     "info": { "count": results.length}, // número de elementos  
+      "results": results // listado 
+   });
 });
-
-
-
-// GET /details
-
-server.get("/details", async (req, res) => {
-
-  res.render('details', {})
-});
-
-
-// Serv estáticos
-
-server.use(express.static("./src/public_html"));
