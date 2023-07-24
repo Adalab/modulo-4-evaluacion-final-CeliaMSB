@@ -101,3 +101,23 @@ server.post ('/api/recetas', async (req,res) => {
     })
   }
 });
+
+server.put ('/api/recetas/:id', async (req, res) => {
+  const recipeId= req.params.id;
+  const {nombre, ingredientes, instrucciones} = req.body;
+  try{
+    const update = 'UPDATE recetas SET nombre = ?, ingredientes = ?, instrucciones = ? WHERE id = ?';
+    const conn =await getConnection();
+    const [results] = await conn.query(update, [nombre, ingredientes, instrucciones, recipeId]);
+    conn.end();
+    res.json({
+      success: true,
+    })
+  }
+  catch(error){
+    res.json({
+      success: false,
+      message: error
+    })
+  }
+});
